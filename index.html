@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7f6">
+<meta name="description" content="GitHub 中文使用手册：面向零编程基础产品经理、站长与 AI 协作开发者。中英对照、页面图解、工作流与实战操作。">
+<title>GitHub 中文使用手册 | 产品经理 × AI 协作</title>
+<link rel="icon" href="./assets/icons/lucide/book-open.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./assets/css/site.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <button class="icon-btn mobile-menu" id="openMenu" aria-label="打开章节目录"><img src="./assets/icons/lucide/menu.svg" alt=""></button>
+    <a class="brand" href="#/home"><span class="brand-mark"><img src="./assets/icons/lucide/book-open.svg" alt=""></span><span class="brand-title">GitHub <b>中文手册</b><small>PRODUCT MANAGER EDITION</small></span></a>
+    <span class="top-divider"></span><span class="top-caption">从代码仓库到产品协作，一站式入门</span>
+    <div class="top-actions"><button class="search-trigger" id="openSearch" aria-label="搜索手册"><img src="./assets/icons/lucide/search.svg" alt=""><span>搜索菜单、术语和操作…</span><kbd>Ctrl K</kbd></button>
+    <button class="icon-btn" id="toggleTheme" aria-label="切换深浅主题" title="切换主题"><img src="./assets/icons/lucide/moon.svg" alt=""></button>
+    <a class="github-link" href="https://github.com/lovejiaowu-hue/five_free" target="_blank" rel="noopener"><img src="./assets/icons/lucide/github.svg" alt=""><span>GitHub 仓库</span><img class="tiny-icon" src="./assets/icons/lucide/arrow-up-right.svg" alt=""></a></div>
+  </header>
+  <div class="shell">
+    <div class="mobile-scrim" id="mobileScrim"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top"><div class="sidebar-eyebrow">LEARNING CENTER <span>2026 / 10</span></div><button class="sidebar-home" data-go="home"><span class="side-icon"><img src="./assets/icons/lucide/layout-dashboard.svg" alt=""></span><span>学习首页</span><img class="side-trailing" src="./assets/icons/lucide/chevron-right.svg" alt=""></button></div>
+      <div class="sidebar-scroll" id="chapterNav"></div>
+      <div class="sidebar-foot"><div class="progress-head"><span>学习进度</span><strong id="progressCount">0 / 23</strong></div><div class="progress-track"><span id="progressFill"></span></div><p>每完成一章，点选「标记已读」。进度仅保存在本机浏览器。</p><a href="https://github.com/lovejiaowu-hue/five_free" target="_blank" rel="noopener">查看本站源码 <img src="./assets/icons/lucide/external-link.svg" alt=""></a></div>
+    </aside>
+    <main id="main" tabindex="-1"><div id="view" class="view"></div><footer class="site-footer"><span>GitHub 中文使用手册 · 2026-10-30 · 非 GitHub 官方产品</span><span>图标：Lucide Icons · ISC License</span></footer></main>
+    <aside class="right-rail" id="rightRail"><div class="rail-card"><span class="rail-eyebrow">ON THIS PAGE</span><div id="pageToc"></div><div class="rail-separator"></div><a class="rail-help" href="https://docs.github.com/" target="_blank" rel="noopener"><img src="./assets/icons/lucide/external-link.svg" alt=""> GitHub 官方帮助</a></div></aside>
+  </div>
+</div>
+<div class="dialog-backdrop hidden" id="searchBackdrop" role="presentation"><section class="search-dialog" role="dialog" aria-modal="true" aria-labelledby="searchTitle"><div class="search-input-wrap"><img src="./assets/icons/lucide/search.svg" alt=""><h2 class="sr-only" id="searchTitle">搜索手册</h2><input id="searchInput" autocomplete="off" spellcheck="false" placeholder="搜索 GitHub 菜单、中文含义或操作指南"><button id="closeSearch" aria-label="关闭搜索">ESC</button></div><div class="search-results" id="searchResults"></div><div class="dialog-foot"><span>支持中英文模糊匹配</span><span>Enter 打开 · Esc 关闭</span></div></section></div>
+<script src="./assets/js/manual.js"></script>
+<script src="./assets/js/site.js"></script>
+</body></html>
