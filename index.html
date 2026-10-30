@@ -8,6 +8,7 @@
 <title>GitHub 中文使用手册 | 产品经理 × AI 协作</title>
 <link rel="icon" href="./assets/icons/lucide/book-open.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./assets/css/site.css">
+<link rel="stylesheet" href="./assets/css/flashcards.css">
 </head>
 <body>
 <div id="app">
@@ -22,7 +23,7 @@
   <div class="shell">
     <div class="mobile-scrim" id="mobileScrim"></div>
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-top"><div class="sidebar-eyebrow">LEARNING CENTER <span>2026 / 10</span></div><button class="sidebar-home" data-go="home"><span class="side-icon"><img src="./assets/icons/lucide/layout-dashboard.svg" alt=""></span><span>学习首页</span><img class="side-trailing" src="./assets/icons/lucide/chevron-right.svg" alt=""></button></div>
+      <div class="sidebar-top"><div class="sidebar-eyebrow">LEARNING CENTER <span>2026 / 10</span></div><button class="sidebar-home" data-go="home"><span class="side-icon"><img src="./assets/icons/lucide/layout-dashboard.svg" alt=""></span><span>学习首页</span><img class="side-trailing" src="./assets/icons/lucide/chevron-right.svg" alt=""></button><button id="wordNavButton" class="sidebar-home flash-nav" data-go="words"><span class="side-icon"><img src="./assets/icons/lucide/layers.svg" alt=""></span><span>GitHub 英语抽卡</span><img class="side-trailing" src="./assets/icons/lucide/chevron-right.svg" alt=""></button></div>
       <div class="sidebar-scroll" id="chapterNav"></div>
       <div class="sidebar-foot"><div class="progress-head"><span>学习进度</span><strong id="progressCount">0 / 23</strong></div><div class="progress-track"><span id="progressFill"></span></div><p>每完成一章，点选「标记已读」。进度仅保存在本机浏览器。</p><a href="https://github.com/lovejiaowu-hue/five_free" target="_blank" rel="noopener">查看本站源码 <img src="./assets/icons/lucide/external-link.svg" alt=""></a></div>
     </aside>
@@ -32,5 +33,7 @@
 </div>
 <div class="dialog-backdrop hidden" id="searchBackdrop" role="presentation"><section class="search-dialog" role="dialog" aria-modal="true" aria-labelledby="searchTitle"><div class="search-input-wrap"><img src="./assets/icons/lucide/search.svg" alt=""><h2 class="sr-only" id="searchTitle">搜索手册</h2><input id="searchInput" autocomplete="off" spellcheck="false" placeholder="搜索 GitHub 菜单、中文含义或操作指南"><button id="closeSearch" aria-label="关闭搜索">ESC</button></div><div class="search-results" id="searchResults"></div><div class="dialog-foot"><span>支持中英文模糊匹配</span><span>Enter 打开 · Esc 关闭</span></div></section></div>
 <script src="./assets/js/manual.js"></script>
+<script src="./assets/js/vocabulary.js"></script>
+<script src="./assets/js/flashcards.js"></script>
 <script src="./assets/js/site.js"></script>
 </body></html>
