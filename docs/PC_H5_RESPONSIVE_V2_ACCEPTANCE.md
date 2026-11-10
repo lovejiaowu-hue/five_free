@@ -48,3 +48,13 @@
 
 ## 回滚
 当前版本只涉及样式与视图结构。如 PC 视觉不合预期，可通过独立 PR 回退 V2 相关改动，原有 Markdown、词库和用户 localStorage 不必迁移。
+
+## V2.1 修复：PC 导航覆盖正文（2026-11-10）
+
+**用户实际截图反馈：** PC 浏览器下章节目录覆盖主内容，左侧出现空列，英雄区被挤压到其他网格行；手机端正常。
+
+**根因：** `index.html` 的 `.shell` 内含一个专供 H5 的 `.mobile-scrim` 遮罩节点，位于 `.sidebar` 之前。旧 CSS 仅在 `max-width:760px` 声明遮罩隐藏规则，桌面端遮罩以默认 `display:block` 占据 CSS Grid 第 1 列，导致 sidebar/main/right-rail 整体位移。
+
+**修复：** 在 `min-width:761px` 下强制隐藏 `.mobile-scrim`，并明确固定 sidebar 在第 1 列、main 在第 2 列、right-rail 在第 3 列，同属第 1 行。手机菜单遮罩显示规则完全保留。
+
+**回归门禁：** `scripts/test-responsive-v2.mjs` 加入上述 CSS 结构断言，并检查移动端原有 `body.menu-open .mobile-scrim` 显示规则未被移除。上线后人工复查 PC 1366/1440/1920 宽度的首页、阅读区与抽卡，确认不再错位；H5 375/390 宽度检查目录弹层。
