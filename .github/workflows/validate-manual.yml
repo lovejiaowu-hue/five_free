@@ -23,9 +23,11 @@ jobs:
           node --check assets/js/vocabulary.js
           node --check assets/js/flashcards.js
           node --check assets/js/site.js
+          node --check assets/js/reading-v3.js
       - name: Verify Markdown mirror, chapter routes, card IDs and assets
         run: node scripts/check-site.mjs
       - name: Verify flashcard behavior and stored progress compatibility
         run: |
           node scripts/test-flashcards.mjs
           node scripts/test-responsive-v2.mjs
+          node scripts/test-experience-v3.mjs
