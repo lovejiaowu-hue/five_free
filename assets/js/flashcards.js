@@ -280,7 +280,7 @@
       toolbar() + (state.tab === "cards" ? cardBody() : listBody()) +
       '</section></div>' +
       '<div class="wc-source-note">' + icon("book-open") +
-      '<p><strong>内容来源：</strong>本站《GitHub 中文使用手册》24 章核心术语，共 210 张词卡。每张卡对应原手册章节；发音使用浏览器自带语音合成。</p></div>' +
+      '<p><strong>内容来源：</strong>本站《GitHub 中文使用手册》共 26 章，收录 210 张相关术语卡。每张卡对应原手册章节；发音使用浏览器自带语音合成。</p></div>' +
       '<div class="wc-footer-actions"><button data-wc-action="reset">' + icon("refresh-cw") +
       '清空学习标记</button><span>数据仅保存在此设备浏览器 · 无需注册登录</span></div>' +
       '<div class="wc-toast" id="wcToast" role="status" aria-live="polite"></div></div>';
