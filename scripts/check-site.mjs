@@ -80,7 +80,7 @@ const permittedUrls = [
   /^https:\/\/USERNAME\.github\.io\/REPOSITORY\/?$/i
 ];
 for (const [label, body] of publicDocs) {
-  const urls = [...body.matchAll(/https?:\/\/[^\s<>)"'\]]+/g)].map(m => m[0].replace(/[.,;：]+$/, ""));
+  const urls = [...body.matchAll(/https?:\/\/[^\s<>)"'\]\u0060\uFF0C\u3002\uFF1B]+/g)].map(m => m[0].replace(/[.,;：]+$/, ""));
   for (const url of urls) {
     if (!permittedUrls.some(pattern => pattern.test(url))) {
       throw Error(label + ": URL needs a privacy review before public publication");
