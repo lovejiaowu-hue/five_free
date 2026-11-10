@@ -63,4 +63,36 @@ if (data.items.filter(c => c.chapter === 24).length !== 81 ||
 if (!site.includes('["实战与治理",18,26]')) throw Error("Chapter 26 not in navigation");
 if (!source.includes("## 25. GitHub Actions 免费额度耗尽") || !source.includes("PASS / FAIL / NOT_RUN") || !site.includes('data-go="25"')) throw Error("Actions fallback chapter or home entry is missing");
 if (!source.includes("## 26. GitHub Desktop") || !site.includes('data-go="26"')) throw Error("GitHub Desktop chapter or home entry missing");
-console.log("PASS: 26 chapters, 210 flashcards, 7 categories, source sync and " + names.size + " verified icon files");
+
+// Public site privacy gate: allow official GitHub references, this documentation
+// site's own links, and an explicitly non-live placeholder Pages URL only.
+// New external example domains must be reviewed before becoming public.
+const publicDocs = [
+  ["README.md", read("README.md")],
+  ["handbook", source],
+  ["CI playbook", read("docs/ai-collaboration/GITHUB_ACTIONS_FREE_QUOTA_CI_PLAYBOOK.md")]
+];
+const permittedUrls = [
+  /^https:\/\/docs\.github\.com\//i,
+  /^https:\/\/github\.com\/settings\/billing\b/i,
+  /^https:\/\/github\.com\/lovejiaowu-hue\/five_free(?:\/|$)/i,
+  /^https:\/\/lovejiaowu-hue\.github\.io\/five_free(?:\/|$)/i,
+  /^https:\/\/USERNAME\.github\.io\/REPOSITORY\/?$/i
+];
+for (const [label, body] of publicDocs) {
+  const urls = [...body.matchAll(/https?:\/\/[^\s<>)"'\]\u0060\uFF0C\u3002\uFF1B]+/g)].map(m => m[0].replace(/[.,;：]+$/, ""));
+  for (const url of urls) {
+    if (!permittedUrls.some(pattern => pattern.test(url))) {
+      throw Error(label + ": URL needs a privacy review before public publication");
+    }
+  }
+  const scripts = body.match(/\bSTART_[A-Z0-9_]+\.cmd\b/g) || [];
+  if (scripts.some(name => name !== "START_APP.cmd")) {
+    throw Error(label + ": example startup commands must use generic placeholders");
+  }
+}
+if (!source.includes("合成") && !source.includes("虚构")) {
+  throw Error("Handbook needs an explicit synthetic case-study disclaimer");
+}
+
+console.log("PASS: 26 chapters, 210 flashcards, 7 categories, source sync and " + names.size + " verified icons / public-example policy");

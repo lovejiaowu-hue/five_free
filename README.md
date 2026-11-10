@@ -27,15 +27,23 @@ https://lovejiaowu-hue.github.io/five_free/
 
 ## 2026-11 增补：零编程产品经理 × AI Agent × GitHub 工程实践
 
-打开 **[第 24 章｜AI 协作编程实战](https://lovejiaowu-hue.github.io/five_free/#/24)**：从去标识化家庭健康 App 研发实践抽取 GitHub 高阶术语、工作流和错误经验，不含患者身份、原件、生产数据库、私有仓库地址或凭据。
+打开 **[第 24 章｜AI 协作编程实战](https://lovejiaowu-hue.github.io/five_free/#/24)**：基于不对应任何具体项目的合成业务场景讲解 GitHub 高阶术语、工作流和常见错误，不含真实用户资料、业务原件、生产数据库、私有仓库地址或凭据。
 
 覆盖从 Issue/PR/Commit SHA、main 与并行分支、CI/Actions、Test/Assertion、Job/Step/Logs、Required checks 到 CD/部署 SHA/数据库迁移、备份恢复、人工验收与 AI 交接。针对「CI 绿不等于上线」「PR 关闭不等于合并」「Completed 不等于 Success」「Runner 不等于生产服务器」等常见误解提供核验方法。
 
-**第 24 章是新增内容，原版前 23 章未删改。** 同步将 81 个新术语添加到抽卡中，原词卡 ID 和浏览器学习记录键保持不变。
+**第 24 章是新增内容；原版前 23 章的知识结构保留，但真实项目示例统一改为匿名示例。** 同步将 81 个新术语添加到抽卡中，原词卡 ID 和浏览器学习记录键保持不变。
 
 ## CI 免费额度降耗经验包
 
 - [GitHub Actions 免费额度耗尽：CI 降耗与安全回退经验包](docs/ai-collaboration/GITHUB_ACTIONS_FREE_QUOTA_CI_PLAYBOOK.md)：面向产品经理与 AI 协同研发的通用排障、去重、受控发布和无独立测试设备时的安全实践。此经验包不含私有项目运行资料，工程实施状态应由各项目自行核验。
+
+## 公开内容脱敏规则
+
+本网站是公开的 GitHub 学习资料，不应出现任何真实私有项目名称、仓库路径、专用启动脚本、私有域名、客户信息、真实业务数据或可反向识别项目的案例细节。教学用仓库名、网站 URL 和文件名必须为明显的占位符，真实案例改写为通用虚构场景。
+
+网站的源 Markdown 和 `assets/js/manual.js` 必须完全一致。添加案例前先检查所有公开文档和词卡的敏感信息；`scripts/check-site.mjs` 已增加外部链接和示例脚本的脱敏门禁。
+
+**边界：** 改写当前 `main` 的文件不等于清除 Git 的历史提交、旧 PR 讨论或已发布的历史版本。涉及历史记录清理时需另行评估，不得擅自 force push 改写仓库历史。
 
 ## GitHub 英语抽卡
 

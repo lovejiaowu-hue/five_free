@@ -1589,7 +1589,7 @@ window.GITHUB_VOCABULARY = {
       "en": "Test case",
       "zh": "测试用例",
       "note": "模拟一个可判断的使用情景：成功、失败、无权限等",
-      "example": "70 test cases：自动执行了 70 个检查场景",
+      "example": "Run representative test cases：执行可复现的检查场景",
       "chapter": 24,
       "level": 1,
       "category": "automation"
@@ -1778,7 +1778,7 @@ window.GITHUB_VOCABULARY = {
       "id": "health-check",
       "en": "Health check",
       "zh": "服务健康检查",
-      "note": "检查有限的健康端点；不证明业务/数据库/患者数据均正确",
+      "note": "检查有限的服务健康端点；不证明业务逻辑、数据库或真实数据均正确",
       "example": "Health 200 is not acceptance：健康检查非验收",
       "chapter": 24,
       "level": 1,
@@ -1989,7 +1989,7 @@ window.GITHUB_VOCABULARY = {
       "en": "Scope baseline",
       "zh": "范围/设计验收基线",
       "note": "已确认的 PRD 或封版原型；Agent 不应凭空改动",
-      "example": "Keep v0.2 baseline：按封版逐项对比",
+      "example": "Keep approved baseline：按已确认的设计基线对比",
       "chapter": 24,
       "level": 1,
       "category": "agent"
@@ -2066,10 +2066,10 @@ window.GITHUB_VOCABULARY = {
     },
     {
       "id": "protected-personal-data",
-      "en": "Sensitive patient data",
-      "zh": "敏感患者资料",
-      "note": "医疗原件、身份映射和数据库不应进入代码仓库或 CI",
-      "example": "No clinical originals in Git：只用合成样本",
+      "en": "Sensitive personal data",
+      "zh": "敏感个人资料",
+      "note": "身份信息、业务记录原件及生产数据库不应进入公开代码仓库或 CI",
+      "example": "Use synthetic examples only：只使用合成测试样本",
       "chapter": 24,
       "level": 1,
       "category": "security"
@@ -2078,8 +2078,8 @@ window.GITHUB_VOCABULARY = {
       "id": "idempotency",
       "en": "Idempotency",
       "zh": "幂等性",
-      "note": "同一请求重复执行仍不会重复生成医疗记录或部署影响",
-      "example": "Retry request safely：重复提交不产生重复记录",
+      "note": "同一请求重复执行时不会生成重复业务记录或产生意外部署影响",
+      "example": "Retry safely：重复调用不产生重复记录",
       "chapter": 24,
       "level": 2,
       "category": "automation"
@@ -2148,8 +2148,8 @@ window.GITHUB_VOCABULARY = {
       "id": "source-provenance",
       "en": "Data provenance",
       "zh": "数据来源链",
-      "note": "区分真实原件、转录和家属自述，不让 AI 提升资料可信度",
-      "example": "Preserve source provenance：来源不能混淆",
+      "note": "区分真实资料、转录内容和用户描述，不把未经核验的来源写成已验证事实",
+      "example": "Preserve source provenance：数据来源必须可追溯",
       "chapter": 24,
       "level": 2,
       "category": "agent"
