@@ -27,7 +27,7 @@ for (const unchanged of ["five-github-words-v1", "wc-filter", "wc-action", "wcWo
   assert.ok(cardsJS.includes(unchanged), "Existing flashcard function missing: " + unchanged);
 }
 assert.match(css, /@media\(max-width:760px\)/, "Mobile layout must remain supported");
-assert.match(css, /prefers-reduced-motion|wc-flipcard/, "Flashcard style not present");
+assert.match(read("assets/css/flashcards.css") + css, /prefers-reduced-motion|wc-flipcard/, "Flashcard base styles not present");
 const openBraces = [...css].filter((x) => x === "{").length;
 const closeBraces = [...css].filter((x) => x === "}").length;
 assert.equal(openBraces, closeBraces, "CSS block braces unbalanced");
