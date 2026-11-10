@@ -1,62 +1,118 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
-function findChrome() {
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+function browserBinary() {
   if (process.env.CHROME_BIN && fs.existsSync(process.env.CHROME_BIN)) return process.env.CHROME_BIN;
   for (const name of ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser"]) {
-    const r = spawnSync("sh", ["-lc", "command -v " + name], { encoding: "utf8" });
+    const r = spawnSync("sh", ["-lc", "command -v " + name], {encoding:"utf8"});
     if (r.status === 0 && r.stdout.trim()) return r.stdout.trim();
   }
-  throw Error("No headless Chrome/Chromium found; browser layout verification is NOT_RUN");
+  throw Error("Chrome/Chromium unavailable: mobile and PC browser checks NOT_RUN");
 }
-const browser = findChrome();
-const html = fs.readFileSync("index.html", "utf8");
-const file = path.join(process.cwd(), ".v3-browser-check.html");
-fs.writeFileSync(file, html.replace("</body>",
-  '<script src="./scripts/layout-probe-v3.js"></script></body>'));
-function run(width, height, route) {
-  const url = pathToFileURL(file).href + "#/" + route;
-  const out = spawnSync(browser, ["--headless=new", "--disable-gpu",
-    "--disable-dev-shm-usage", "--no-sandbox", "--allow-file-access-from-files",
-    "--no-first-run", "--no-default-browser-check", "--hide-scrollbars",
-    "--force-device-scale-factor=1", "--virtual-time-budget=2800",
-    "--window-size=" + width + "," + height, "--dump-dom", url
-  ], {encoding:"utf8",timeout:30000,maxBuffer:12*1024*1024});
-  if (out.error) throw out.error;
-  if (out.status !== 0) throw Error("Browser exited "+out.status+": "+out.stderr.slice(-600));
-  const m = out.stdout.match(/<pre id="layout-metrics">([^<]+)<\/pre>/);
-  if (!m) throw Error("No layout metrics for "+route+" @"+width+": "+out.stderr.slice(-450));
-  const data = JSON.parse(m[1].replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">"));
-  const vw = data.viewport;
-  assert.ok(vw >= 320, "Unexpected viewport " + vw);
-  assert.ok(data.main && data.main.width > 200, "Main view collapsed");
-  assert.ok(data.fullWidth - vw <= 3, "Horizontal page overflow: " + JSON.stringify(data));
-  if (vw >= 761) {
-    assert.equal(data.overlay.display, "none", "H5 overlay participated in desktop Grid");
-    assert.ok(data.sidebar.right <= data.main.x + 2, "Sidebar overlaps main");
-    if (data.rail && data.rail.display !== "none")
-      assert.ok(data.main.right <= data.rail.x + 2, "Main overlaps table of contents");
-  }
-  if (route === "26") {
-    assert.ok(data.article && data.article.width > 200, "Chapter article missing");
-    assert.ok(data.reader && data.reader.width > 200, "Reading toolbar missing");
-    if (vw <= 760) assert.ok(data.reader.width <= vw, "Mobile toolbar overflow");
-  }
-  if (route === "words") {
-    assert.ok(data.card && data.card.width > 200, "Flashcard missing");
-    assert.ok(data.card.right <= vw + 2, "Flashcard clipped at right edge");
-    assert.ok(data.studio && data.studio.width > 200, "Study workspace missing");
-  }
-  console.log("PASS browser",width+"x"+height,route,"viewport",vw,
-    "main width",Math.round(data.main.width),"overflow",data.fullWidth-vw);
+const profile = fs.mkdtempSync(path.join(os.tmpdir(), "five-guide-cdp-"));
+const chrome = spawn(browserBinary(), [
+  "--headless=new", "--disable-gpu", "--disable-dev-shm-usage", "--no-sandbox",
+  "--no-first-run", "--remote-debugging-port=0", "--remote-allow-origins=*",
+  "--user-data-dir=" + profile, "--allow-file-access-from-files", "about:blank"
+], {stdio:"ignore"});
+let ws = null, seq = 0;
+const pending = new Map();
+function send(method, params = {}) {
+  return new Promise((resolve, reject) => {
+    const id = ++seq;
+    pending.set(id, {resolve, reject});
+    ws.send(JSON.stringify({id, method, params}));
+    setTimeout(() => {
+      if (pending.has(id)) {
+        pending.delete(id);
+        reject(Error("CDP timeout: " + method));
+      }
+    }, 12000);
+  });
 }
+const measure = [
+  "(()=>{",
+  "function rect(sel){const e=document.querySelector(sel);if(!e)return null;",
+  "const r=e.getBoundingClientRect(),s=getComputedStyle(e);",
+  "return {x:r.x,right:r.right,width:r.width,height:r.height,display:s.display,font:s.fontSize};}",
+  "const a=document.querySelector('.article');",
+  "return JSON.stringify({viewport:innerWidth,fullWidth:document.documentElement.scrollWidth,",
+  "overlay:rect('.mobile-scrim'),sidebar:rect('.sidebar'),main:rect('#main'),",
+  "rail:rect('.right-rail'),article:rect('.article'),",
+  "reader:rect('.reading-toolbar'),card:rect('.wc-flipcard'),",
+  "studio:rect('.wc-studio-layout'),font:a?getComputedStyle(a).fontSize:null});",
+  "})()"
+].join("");
 try {
-  for(const [w,h,route] of [
+  let activePort = "";
+  for(let i=0;i<100;i++){
+    try {activePort=fs.readFileSync(path.join(profile,"DevToolsActivePort"),"utf8");break;}
+    catch(_) {await sleep(100);}
+  }
+  assert.ok(activePort,"Chrome DevTools port not available");
+  const port=Number(activePort.trim().split("\n")[0]);
+  const tabs=await fetch("http://127.0.0.1:"+port+"/json/list").then(r=>r.json());
+  const tab=tabs.find(x=>x.type==="page");
+  assert.ok(tab,"No Chrome page target");
+  ws=new WebSocket(tab.webSocketDebuggerUrl);
+  ws.addEventListener("message",event=>{
+    const data=JSON.parse(event.data);
+    if(data.id&&pending.has(data.id)){
+      const item=pending.get(data.id);
+      pending.delete(data.id);
+      if(data.error)item.reject(Error(JSON.stringify(data.error)));else item.resolve(data.result);
+    }
+  });
+  await new Promise((resolve,reject)=>{
+    ws.addEventListener("open",resolve,{once:true});
+    ws.addEventListener("error",reject,{once:true});
+  });
+  await send("Page.enable");
+  for(const [width,height,route] of [
     [1366,768,"26"],[1440,900,"words"],[1920,1080,"home"],
-    [390,844,"26"],[375,812,"words"]])run(w,h,route);
+    [390,844,"26"],[375,812,"words"]
+  ]) {
+    await send("Emulation.setDeviceMetricsOverride", {
+      width,height,deviceScaleFactor:1,mobile:width<=760,screenWidth:width,screenHeight:height
+    });
+    await send("Page.navigate", {url:pathToFileURL(path.resolve("index.html")).href+"#/"+route});
+    await sleep(900);
+    const response=await send("Runtime.evaluate",{expression:measure,returnByValue:true});
+    const raw=response?.result?.value;
+    if(!raw)throw Error("Browser returned no measurements: "+width+"/"+route);
+    const data=JSON.parse(raw);
+    assert.equal(data.viewport,width,"Mobile/PC viewport emulation must match requested width");
+    assert.ok(data.main&&data.main.width>200,"Main region not rendered");
+    assert.ok(data.fullWidth-width<=3,"Horizontal overflow: "+JSON.stringify(data));
+    if(width>=761){
+      assert.equal(data.overlay.display,"none","Mobile overlay occupies desktop grid");
+      assert.ok(data.sidebar.right<=data.main.x+2,"Sidebar overlaps main region");
+      if(data.rail&&data.rail.display!=="none")
+        assert.ok(data.main.right<=data.rail.x+2,"Main overlaps reading TOC");
+    }
+    if(route==="26"){
+      assert.ok(data.article&&data.article.width>200,"Article missing");
+      assert.ok(data.reader&&data.reader.width>200,"Reader toolbar missing");
+      assert.ok(parseFloat(data.font)>=17,"Body font too small: "+data.font);
+      assert.ok(data.reader.right<=width+2,"Reading toolbar clipped");
+    }
+    if(route==="words"){
+      assert.ok(data.card&&data.card.width>200,"Flashcard missing");
+      assert.ok(data.card.right<=width+2,"Flashcard clipped");
+      assert.ok(data.studio&&data.studio.width>200,"Study workspace missing");
+    }
+    console.log("PASS browser",width+"x"+height,route,"exact viewport",data.viewport,
+      "main",Math.round(data.main.width),"body overflow",data.fullWidth-width);
+  }
 } finally {
-  fs.rmSync(file,{force:true});
+  try {if(ws)ws.close();} catch(_){}
+  try {chrome.kill("SIGTERM");} catch(_){}
+  // Chrome may still be releasing profile locks. Ignore temporary cleanup failures.
+  await sleep(450);
+  try {fs.rmSync(profile,{recursive:true,force:true,maxRetries:3,retryDelay:100});} catch(_){}
 }
