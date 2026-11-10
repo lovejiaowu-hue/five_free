@@ -9,7 +9,7 @@ const flash = read("assets/js/flashcards.js");
 const vocab = read("assets/js/vocabulary.js");
 const source = read("docs/GitHub_中文使用手册_2026-10.md");
 const chapterCount = (source.match(/^## \d{2}\./gm) || []).length;
-if (chapterCount !== 25) throw Error("Expected 25 handbook chapters: " + chapterCount);
+if (chapterCount !== 26) throw Error("Expected 26 handbook chapters: " + chapterCount);
 const manualSandbox = { window: {} };
 vm.runInNewContext(read("assets/js/manual.js"), manualSandbox);
 if (manualSandbox.window.GITHUB_MANUAL_MARKDOWN !== source) {
@@ -36,7 +36,7 @@ for (const c of data.items) {
   if (!c.id || unique.has(c.id)) throw Error("Duplicate/missing word ID: " + c.id);
   unique.add(c.id);
   if (!c.en || !c.zh || !c.note || !c.example || !Number.isInteger(c.chapter) ||
-      c.chapter < 1 || c.chapter > 25 || !data.groups.some(g => g.id === c.category))
+      c.chapter < 1 || c.chapter > 26 || !data.groups.some(g => g.id === c.category))
     throw Error("Incomplete bilingual word card " + c.id);
 }
 const names = new Set([
@@ -60,6 +60,7 @@ if (data.items.filter(c => c.chapter === 24).length !== 81 ||
     !data.items.some(c => c.id === "ssot" && c.chapter === 24)) {
   throw Error("Original 129 words must remain and 81 practice cards map to chapter 24");
 }
-if (!site.includes('["实战与治理",18,25]')) throw Error("Chapter 25 not in navigation");
+if (!site.includes('["实战与治理",18,26]')) throw Error("Chapter 26 not in navigation");
 if (!source.includes("## 25. GitHub Actions 免费额度耗尽") || !source.includes("PASS / FAIL / NOT_RUN") || !site.includes('data-go="25"')) throw Error("Actions fallback chapter or home entry is missing");
-console.log("PASS: 25 chapters, 210 flashcards, 7 categories, source sync and " + names.size + " verified icon files");
+if (!source.includes("## 26. GitHub Desktop") || !site.includes('data-go="26"')) throw Error("GitHub Desktop chapter or home entry missing");
+console.log("PASS: 26 chapters, 210 flashcards, 7 categories, source sync and " + names.size + " verified icon files");

@@ -1,9 +1,19 @@
 # GitHub 中文使用手册 · 产品经理 × AI 协作版
 
-响应式 H5 学习网站，保留 2026-10-30 原版 23 章及第 24 章「AI 协同研发实战」，并在 2026-11 新增第 25 章「Actions 免费额度耗尽时的 Agent 自测交付过渡方案」。适合零编程基础产品经理与 AI 编程协作。
+响应式 H5 学习网站，保留 2026-10-30 原版 23 章及第 24 章「AI 协同研发实战」，并在 2026-11 新增第 25 章「Actions 额度耗尽过渡方案」、第 26 章「GitHub Desktop 界面识读与本地验收」。适合零编程基础产品经理与 AI 编程协作。
 
 ## 在线网址
 https://lovejiaowu-hue.github.io/five_free/
+
+## 2026-11 新增：GitHub Desktop 零代码产品经理操作课
+
+网站入口：**[第 26 章｜GitHub Desktop 界面识读 · main 同步 · Agent 协作](https://lovejiaowu-hue.github.io/five_free/#/26)**。
+
+- 中英对照解释 Current repository / Current branch / Fetch origin / Pull origin / Changes / History / Other branches / Draft PR。
+- 明确日常只同步 main；其他分支与 PR、CI、Release、部署运维交给 Agent。
+- 提供四步 Fetch → Pull → History / Explorer → 本地验收操作 SOP，以及误判与风险提醒。
+- 直接接入站点 PC/H5 的首页知识卡、侧边目录、右侧导航、搜索与阅读进度。
+- 保留已有 210 张抽卡、全部旧章节与本地学习记录键；此次不修改 GitHub Actions 配置。
 
 ## 2026-11 新增：GitHub Actions 免费额度用完的过渡方案
 
@@ -40,7 +50,7 @@ https://lovejiaowu-hue.github.io/five_free/
 - 空格翻面、左右方向键切换、数字键 1 待复习／2 已掌握
 
 ## PC / H5 自适应 V2.0（2026-11）
-- 统一站点、统一手册与词库：保留现有 25 章、210 张词卡、Hash 路由、本机学习记录和 GitHub Pages 发布地址。
+- 统一站点、统一手册与词库：保留现有 26 章、210 张词卡、Hash 路由、本机学习记录和 GitHub Pages 发布地址。
 - 新增 `assets/css/responsive-v2.css`，由桌面宽度实现独立布局，不复制 HTML 页面和 JS 数据。
 - PC 首页：双栏学习 Dashboard，加入阅读进度、继续阅读、抽卡训练、AI 协作学习入口。
 - PC 阅读：宽内容区、更舒适的排版、自动适应中等屏宽的目录与表格。
@@ -54,7 +64,7 @@ https://lovejiaowu-hue.github.io/five_free/
 - index.html：静态 HTML 入口
 - assets/css/site.css：组件化响应式样式
 - assets/js/site.js：章节导航、搜索、主题、学习进度、原生 Markdown 渲染、图解
-- assets/js/manual.js：25 章完整手册数据，由 Markdown 源文件同步生成
+- assets/js/manual.js：26 章完整手册数据，由 Markdown 源文件同步生成
 - assets/js/vocabulary.js：210 张 GitHub 术语卡的英汉释义与实践场景例子
 - assets/js/flashcards.js：抽卡、翻面、朗读、标记与进度模块
 - assets/css/flashcards.css：抽卡学习页的组件样式
@@ -62,7 +72,7 @@ https://lovejiaowu-hue.github.io/five_free/
 - scripts/test-responsive-v2.mjs：断点、PC 首页 DOM 和兼容性自动检查
 - scripts/test-flashcards.mjs：抽卡功能无依赖运行测试
 - assets/icons/lucide：官方 Lucide SVG 图标和 ISC License
-- docs/GitHub_中文使用手册_2026-10.md：原始 23 章完整保留 + 2026-11 新增第 24、25 章
+- docs/GitHub_中文使用手册_2026-10.md：原始 23 章完整保留 + 2026-11 新增第 24、25、26 章
 - docs/ai-collaboration/AGENT_SVG_ICON_GUIDE.md：图标规范
 - scripts/check-site.mjs：目录、源 Markdown/网页镜像一致性、全部 210 词卡与图标资产检查
 - .github/workflows/validate-manual.yml：PR 自动检查（不发布；额度受限时可能无法运行）
