@@ -200,3 +200,9 @@
 @media(prefers-reduced-motion:reduce){
  .wc-flipcard,.reading-toast,.reading-progress span{transition:none}
 }
+
+/* Glossary list retains light/dark token contrast independently from dark card back. */
+.wc-list-example .wc-example-en{color:var(--text);font-size:12px;font-weight:700}
+.wc-list-example .wc-example-zh{color:var(--muted);font-size:11px}
+.wc-back .wc-example-en{color:#e1f4ef}
+.wc-back .wc-example-zh{color:#b8d8d1}
