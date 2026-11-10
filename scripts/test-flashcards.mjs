@@ -22,8 +22,13 @@ const window = {
 const sandbox = { window, document, localStorage, console, Date, Map, Math, JSON,
   navigator: {}, SpeechSynthesisUtterance: undefined };
 vm.runInNewContext(fs.readFileSync("assets/js/vocabulary.js", "utf8"), sandbox);
-assert.equal(window.GITHUB_VOCABULARY.items.length, 129, "Must retain all 129 cards");
-assert.equal(window.GITHUB_VOCABULARY.groups.length, 6);
+assert.equal(window.GITHUB_VOCABULARY.items.length, 210, "Original 129 + 81 real-world terms");
+assert.equal(window.GITHUB_VOCABULARY.items.filter(x => x.chapter === 24).length, 81);
+assert.ok(window.GITHUB_VOCABULARY.items.find(x => x.id === "repository"), "Must keep old saved card IDs");
+assert.ok(window.GITHUB_VOCABULARY.items.find(x => x.id === "ci"), "Original CI card remains");
+assert.ok(window.GITHUB_VOCABULARY.items.find(x => x.id === "not-verified"), "New status card exists");
+assert.ok(window.GITHUB_VOCABULARY.items.find(x => x.id === "agents-md"), "New AI workflow terms exist");
+assert.equal(window.GITHUB_VOCABULARY.groups.length, 7);
 vm.runInNewContext(fs.readFileSync("assets/js/flashcards.js", "utf8"), sandbox);
 
 const root = { dataset: {}, innerHTML: "", addEventListener(name, cb) { listeners[name] = cb; },
@@ -33,7 +38,7 @@ window.GithubFlashcards.mount(root);
 assert.ok(root.innerHTML.includes("抽卡学习"), "Cards should render");
 assert.ok(root.innerHTML.includes("data-wc-action=\"flip\""), "Flip control required");
 assert.ok(root.innerHTML.includes("未掌握"), "Default practice filter required");
-assert.equal(window.GithubFlashcards.count(), 129);
+assert.equal(window.GithubFlashcards.count(), 210);
 
 const first = window.GITHUB_VOCABULARY.items[0];
 assert.ok(first.en && first.zh && first.note && first.example);
@@ -53,4 +58,4 @@ assert.equal(window.GithubFlashcards.stats().saved, 1);
 click("favorite", first.id);
 assert.equal(window.GithubFlashcards.stats().saved, 0);
 assert.ok(storage.get("five-github-words-v1"), "Progress must persist");
-console.log("PASS: flashcard boot, 129 terms, flip control, marking, favorites and persistence");
+console.log("PASS: flashcard boot, 210 terms (129 original + 81 new), chapter 24, flip, marks and persistence");
