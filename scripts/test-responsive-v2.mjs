@@ -17,6 +17,21 @@ for (const width of [761, 1200, 1500, 1800]) {
   assert.match(css, new RegExp("min-width:\\s*" + width + "px"), "Missing responsive breakpoint " + width);
 }
 assert.match(css, /max-width:760px/, "Preserve mobile breakpoint");
+
+assert.match(css, /@media\s*\(min-width:\s*761px\)/, "Desktop-specific grid guard required");
+assert.match(css, /\.shell\s*>\s*\.mobile-scrim\s*\{\s*display:none\s*!important\s*\}/,
+  "Desktop mobile overlay must be hidden so it cannot consume grid column 1");
+assert.match(css, /\.shell\s*>\s*\.sidebar\s*\{\s*grid-column:1\s*;\s*grid-row:1\s*;/,
+  "Sidebar must occupy column 1, row 1");
+assert.match(css, /\.shell\s*>\s*#main\s*\{\s*grid-column:2\s*;\s*grid-row:1\s*;/,
+  "Content must occupy column 2, row 1");
+assert.match(css, /\.shell\s*>\s*\.right-rail\s*\{\s*grid-column:3\s*;\s*grid-row:1\s*;/,
+  "Reading table of contents must occupy column 3, row 1");
+assert.match(html, /<div class="mobile-scrim"[^>]*><\/div>\s*<aside class="sidebar"/,
+  "Regression guard: mobile overlay must not push desktop sidebar into main column");
+assert.match(read("assets/css/site.css"), /body\.menu-open\s+\.mobile-scrim\s*\{\s*display:block\s*\}/,
+  "Existing mobile overlay interaction must remain intact");
+
 assert.match(css, /\.pc-home-hero\s*\{display:grid/, "Desktop homepage must be a real two-column layout");
 assert.match(css, /\.wc-studio-layout\s*\{display:grid/, "Desktop flashcard studio must have two columns");
 assert.match(css, /\.article\s*\{font-size:var\(--pc-reading-font\)/, "Desktop typography upgrade missing");
