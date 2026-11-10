@@ -9,8 +9,12 @@ const flash = read("assets/js/flashcards.js");
 const vocab = read("assets/js/vocabulary.js");
 const source = read("docs/GitHub_中文使用手册_2026-10.md");
 const chapterCount = (source.match(/^## \d{2}\./gm) || []).length;
-if (chapterCount !== 23) throw Error("Expected 23 handbook chapters: " + chapterCount);
-if (!read("assets/js/manual.js").includes("GITHUB_MANUAL_MARKDOWN")) throw Error("Handbook missing");
+if (chapterCount !== 24) throw Error("Expected 24 handbook chapters: " + chapterCount);
+const manualSandbox = { window: {} };
+vm.runInNewContext(read("assets/js/manual.js"), manualSandbox);
+if (manualSandbox.window.GITHUB_MANUAL_MARKDOWN !== source) {
+  throw Error("Markdown source and embedded site handbook differ; regenerate manual.js");
+}
 for (const p of [
   "assets/css/site.css", "assets/css/flashcards.css", "assets/js/site.js",
   "assets/js/manual.js", "assets/js/vocabulary.js", "assets/js/flashcards.js",
@@ -25,14 +29,14 @@ if (!site.includes('h==="words"') || !site.includes("GithubFlashcards.mount"))
 const sandbox = { window: {} };
 vm.runInNewContext(vocab, sandbox);
 const data = sandbox.window.GITHUB_VOCABULARY;
-if (!data || data.groups.length !== 6 || data.items.length !== 129)
-  throw Error("Expected 6 categories and 129 flashcards");
+if (!data || data.groups.length !== 7 || data.items.length !== 210)
+  throw Error("Expected 7 categories and 210 flashcards");
 const unique = new Set();
 for (const c of data.items) {
   if (!c.id || unique.has(c.id)) throw Error("Duplicate/missing word ID: " + c.id);
   unique.add(c.id);
   if (!c.en || !c.zh || !c.note || !c.example || !Number.isInteger(c.chapter) ||
-      c.chapter < 1 || c.chapter > 23 || !data.groups.some(g => g.id === c.category))
+      c.chapter < 1 || c.chapter > 24 || !data.groups.some(g => g.id === c.category))
     throw Error("Incomplete bilingual word card " + c.id);
 }
 const names = new Set([
@@ -51,4 +55,10 @@ for (const n of names) {
   if (!fs.existsSync(p)) throw Error("Missing icon: " + p);
   if (!read(p).includes("<svg")) throw Error("Invalid SVG: " + p);
 }
-console.log("PASS: 23 chapters, 129 flashcards, 6 categories, " + names.size + " verified icon files");
+if (data.items.filter(c => c.chapter === 24).length !== 81 ||
+    !data.items.some(c => c.id === "ci" && c.chapter !== 24) ||
+    !data.items.some(c => c.id === "ssot" && c.chapter === 24)) {
+  throw Error("Original 129 words must remain and 81 practice cards map to chapter 24");
+}
+if (!site.includes('["实战与治理",18,24]')) throw Error("Chapter 24 not in navigation");
+console.log("PASS: 24 chapters, 210 flashcards, 7 categories, source sync and " + names.size + " verified icon files");
