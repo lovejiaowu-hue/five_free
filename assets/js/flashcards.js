@@ -431,6 +431,9 @@
   }
   function mount(target) {
     root = target;
+    // Returning to the study route always starts with the question side.
+    // Keep word, status, favorites and learning records unchanged.
+    state.flipped = false;
     if (!root.dataset.wordEvents) {
       root.addEventListener("click", onClick);
       root.addEventListener("input", (event) => {
