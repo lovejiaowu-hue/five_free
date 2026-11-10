@@ -69,7 +69,7 @@ const sandbox = { window, document, location, localStorage, navigator: {}, conso
 vm.runInNewContext(manualJS, sandbox, { filename: "manual.js" });
 vm.runInNewContext(siteJS, sandbox, { filename: "site.js" });
 const home = element("view").innerHTML;
-for (const expected of ["pc-home-hero", "pc-start-panel", "pc-start-progress", "data-go=\"words\"", "data-go=\"24\"", "data-go=\"25\""]) {
+for (const expected of ["pc-home-hero", "pc-start-panel", "pc-start-progress", "data-go=\"words\"", "data-go=\"24\"", "data-go=\"25\"", "data-go=\"26\""]) {
   assert.ok(home.includes(expected), "Missing homepage section: " + expected);
 }
 assert.match(home, /<section class="hero">[\s\S]*<\/section><aside class="pc-start-panel"/,
@@ -78,5 +78,5 @@ const vocabSandbox = { window: {} };
 vm.runInNewContext(vocabJS, vocabSandbox);
 assert.equal(vocabSandbox.window.GITHUB_VOCABULARY.items.length, 210);
 assert.equal(vocabSandbox.window.GITHUB_VOCABULARY.groups.length, 7);
-assert.equal((read("docs/GitHub_中文使用手册_2026-10.md").match(/^## \d{2}\./gm) || []).length, 25);
-console.log("PASS: responsive V2 CSS breakpoints, PC dashboard DOM, 25 chapters and 210 cards");
+assert.equal((read("docs/GitHub_中文使用手册_2026-10.md").match(/^## \d{2}\./gm) || []).length, 26);
+console.log("PASS: responsive V2 CSS breakpoints, PC dashboard DOM, 26 chapters and 210 cards");
