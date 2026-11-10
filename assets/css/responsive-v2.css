@@ -2,6 +2,18 @@
    Single document and interaction model, distinct desktop/tablet/mobile layouts.
    Load after site.css and flashcards.css. No external assets. */
 :root{--pc-reading-font:15.5px;--pc-reading-line:1.9}
+
+/* The mobile overlay exists in the DOM before the desktop sidebar.
+   It MUST NOT participate in the desktop CSS grid: otherwise it consumes
+   column 1, pushes the sidebar to the content column, and moves main
+   into a wrong grid cell/row. */
+@media (min-width:761px){
+  .shell > .mobile-scrim{display:none!important}
+  .shell > .sidebar{grid-column:1;grid-row:1;min-width:0}
+  .shell > #main{grid-column:2;grid-row:1;min-width:0}
+  .shell > .right-rail{grid-column:3;grid-row:1;min-width:0}
+}
+
 html{scroll-padding-top:90px}
 body{min-width:320px}
 button,a{-webkit-tap-highlight-color:transparent}
