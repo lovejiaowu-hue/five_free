@@ -12,7 +12,7 @@ permissions:
   contents: read
 jobs:
   validate:
-    name: 24 chapters / 210 flashcards / zero private content
+    name: 25 chapters / 210 flashcards / zero private content
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
