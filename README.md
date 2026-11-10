@@ -27,7 +27,7 @@ https://lovejiaowu-hue.github.io/five_free/
 
 ## 2026-11 增补：零编程产品经理 × AI Agent × GitHub 工程实践
 
-打开 **[第 24 章｜AI 协作编程实战](https://lovejiaowu-hue.github.io/five_free/#/24)**：从去标识化家庭健康 App 研发实践抽取 GitHub 高阶术语、工作流和错误经验，不含患者身份、原件、生产数据库、私有仓库地址或凭据。
+打开 **[第 24 章｜AI 协作编程实战](https://lovejiaowu-hue.github.io/five_free/#/24)**：基于不对应任何具体项目的合成业务场景讲解 GitHub 高阶术语、工作流和常见错误，不含真实用户资料、业务原件、生产数据库、私有仓库地址或凭据。
 
 覆盖从 Issue/PR/Commit SHA、main 与并行分支、CI/Actions、Test/Assertion、Job/Step/Logs、Required checks 到 CD/部署 SHA/数据库迁移、备份恢复、人工验收与 AI 交接。针对「CI 绿不等于上线」「PR 关闭不等于合并」「Completed 不等于 Success」「Runner 不等于生产服务器」等常见误解提供核验方法。
 
