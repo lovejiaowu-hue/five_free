@@ -25,6 +25,7 @@ jobs:
         run: |
           node scripts/check-site.mjs
           node scripts/test-flashcards.mjs
+          node scripts/test-responsive-v2.mjs
   deploy:
     needs: validate
     runs-on: ubuntu-latest

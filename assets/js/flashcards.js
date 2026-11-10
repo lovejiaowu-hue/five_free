@@ -250,15 +250,28 @@
   }
   function draw() {
     if (!root) return;
-    root.innerHTML = '<div class="wc-page">' + header() + topicButtons() + toolbar() +
-      (state.tab === "cards" ? cardBody() : listBody()) +
+    root.innerHTML = '<div class="wc-page">' + header() +
+      '<div class="wc-studio-layout"><aside class="wc-studio-side" aria-label="学习主题和进度">' +
+      topicButtons() + '</aside><section class="wc-studio-main" aria-label="英语抽卡学习区">' +
+      toolbar() + (state.tab === "cards" ? cardBody() : listBody()) +
+      '</section></div>' +
       '<div class="wc-source-note">' + icon("book-open") +
-      '<p><strong>内容来源：</strong>本站《GitHub 中文使用手册》23 章核心术语，包含常见菜单、操作、状态与组合短语。每张卡对应原手册章节。发音使用设备浏览器自带语音合成能力，是否支持取决于设备。</p></div>' +
+      '<p><strong>内容来源：</strong>本站《GitHub 中文使用手册》24 章核心术语，共 210 张词卡。每张卡对应原手册章节；发音使用浏览器自带语音合成。</p></div>' +
       '<div class="wc-footer-actions"><button data-wc-action="reset">' + icon("refresh-cw") +
       '清空学习标记</button><span>数据仅保存在此设备浏览器 · 无需注册登录</span></div>' +
       '<div class="wc-toast" id="wcToast" role="status" aria-live="polite"></div></div>';
+    // Rehome the existing progress components. Moving nodes retains card data,
+    // event delegation, localStorage keys and mobile markup without duplication.
+    const side = root.querySelector(".wc-studio-side");
+    const stats = root.querySelector(".wc-stats");
+    const progress = root.querySelector(".wc-progress");
+    if (side && stats && progress) {
+      side.insertBefore(stats, side.firstChild);
+      side.insertBefore(progress, stats.nextSibling);
+    }
     if (state.tab === "list") listResults();
   }
+
   function step(direction) {
     const items = pool();
     if (!items.length) return;

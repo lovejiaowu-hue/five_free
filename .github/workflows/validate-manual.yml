@@ -26,4 +26,6 @@ jobs:
       - name: Verify Markdown mirror, chapter routes, card IDs and assets
         run: node scripts/check-site.mjs
       - name: Verify flashcard behavior and stored progress compatibility
-        run: node scripts/test-flashcards.mjs
+        run: |
+          node scripts/test-flashcards.mjs
+          node scripts/test-responsive-v2.mjs
