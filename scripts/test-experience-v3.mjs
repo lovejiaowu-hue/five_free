@@ -60,6 +60,11 @@ assert.equal(card["aria-pressed"],"true");
 assert.ok(store.get("five-github-words-v1"),"Existing word store key should remain");
 cardEvents.click({target:flip});
 assert.equal(renders,1);assert.ok(!classes.has("flipped"));
+cardEvents.click({target:flip});
+assert.ok(classes.has("flipped"),"Card must show answer after click");
+wordWindow.GithubFlashcards.mount(wordRoot);
+assert.ok(!wordRoot.innerHTML.includes('wc-flipcard flipped'),
+  "Returning to study page should reset only the card face, not stored learning marks");
 const markdownMirror={window:{}};
 vm.runInNewContext(read("assets/js/manual.js"),markdownMirror);
 assert.equal(markdownMirror.window.GITHUB_MANUAL_MARKDOWN,md);
