@@ -31,3 +31,5 @@ jobs:
           node scripts/test-flashcards.mjs
           node scripts/test-responsive-v2.mjs
           node scripts/test-experience-v3.mjs
+      - name: Real Chrome PC/H5 layout regression
+        run: node scripts/test-browser-layout-v3.mjs
