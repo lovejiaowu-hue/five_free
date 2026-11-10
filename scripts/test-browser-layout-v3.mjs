@@ -123,7 +123,7 @@ try {
       const result=await send("Runtime.evaluate",{returnByValue:true,
         expression:'(()=>{const c=document.querySelector(".wc-flipcard");c.click();return JSON.stringify({same:c===document.querySelector(".wc-flipcard"),flipped:c.classList.contains("flipped"),example:!!c.querySelector(".wc-example-lines")});})()'});
       const value=JSON.parse(result.result.value);
-      assert.ok(value.same&&value.flipped&&value.example,"Real browser flashcard flip or bilingual example failed");
+      assert.ok(value.same&&value.flipped&&value.example,"Real browser flashcard flip or bilingual example failed at "+width+": "+JSON.stringify(value));
     }
     console.log("PASS browser",width+"x"+height,route,"exact viewport",data.viewport,
       "main",Math.round(data.main.width),"body overflow",data.fullWidth-width);
