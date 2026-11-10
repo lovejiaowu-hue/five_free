@@ -13,6 +13,10 @@ https://lovejiaowu-hue.github.io/five_free/
 
 **第 24 章是新增内容，原版前 23 章未删改。** 同步将 81 个新术语添加到抽卡中，原词卡 ID 和浏览器学习记录键保持不变。
 
+## CI 免费额度降耗经验包
+
+- [GitHub Actions 免费额度耗尽：CI 降耗与安全回退经验包](docs/ai-collaboration/GITHUB_ACTIONS_FREE_QUOTA_CI_PLAYBOOK.md)：面向产品经理与 AI 协同研发的通用排障、去重、受控发布和无独立测试设备时的安全实践。此经验包不含私有项目运行资料，工程实施状态应由各项目自行核验。
+
 ## GitHub 英语抽卡
 
 体验入口：https://lovejiaowu-hue.github.io/five_free/#/words
