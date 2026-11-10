@@ -74,7 +74,7 @@ try {
   });
   await send("Page.enable");
   for(const [width,height,route] of [
-    [1366,768,"26"],[1440,900,"words"],[1920,1080,"home"],
+    [1366,768,"26"],[1440,900,"1"],[1440,900,"words"],[1920,1080,"home"],
     [390,844,"26"],[375,812,"words"]
   ]) {
     await send("Emulation.setDeviceMetricsOverride", {
@@ -95,7 +95,7 @@ try {
       if(data.rail&&data.rail.display!=="none")
         assert.ok(data.main.right<=data.rail.x+2,"Main overlaps reading TOC");
     }
-    if(route==="26"){
+    if(route==="26" || route==="1"){
       assert.ok(data.article&&data.article.width>200,"Article missing");
       assert.ok(data.reader&&data.reader.width>200,"Reader toolbar missing");
       assert.ok(parseFloat(data.font)>=17,"Body font too small: "+data.font);
@@ -105,6 +105,25 @@ try {
       assert.ok(data.card&&data.card.width>200,"Flashcard missing");
       assert.ok(data.card.right<=width+2,"Flashcard clipped");
       assert.ok(data.studio&&data.studio.width>200,"Study workspace missing");
+    }
+
+    if(route==="1"){
+      const result=await send("Runtime.evaluate",{returnByValue:true,
+        expression:'(()=>{const w=document.querySelector(".reading-bilingual-wrap");const b=w&&w.querySelector("[data-table-mode=cards]");if(!b)return JSON.stringify({found:false});b.click();return JSON.stringify({found:true,card:w.classList.contains("reading-card-view"),copy:!!w.querySelector(".reading-copy-term")});})()'});
+      const value=JSON.parse(result.result.value);
+      assert.ok(value.found&&value.card&&value.copy,"Bilingual table/card mode or term copy button failed");
+    }
+    if(route==="26"){
+      const result=await send("Runtime.evaluate",{returnByValue:true,
+        expression:'(()=>{const a=document.querySelector(".article"),b=document.querySelector("[data-reader-action=larger]");const before=parseFloat(getComputedStyle(a).fontSize);b.click();return JSON.stringify({before,after:parseFloat(getComputedStyle(a).fontSize)});})()'});
+      const value=JSON.parse(result.result.value);
+      assert.ok(value.after>value.before,"Reading size controls did not affect actual text");
+    }
+    if(route==="words"){
+      const result=await send("Runtime.evaluate",{returnByValue:true,
+        expression:'(()=>{const c=document.querySelector(".wc-flipcard");c.click();return JSON.stringify({same:c===document.querySelector(".wc-flipcard"),flipped:c.classList.contains("flipped"),example:!!c.querySelector(".wc-example-lines")});})()'});
+      const value=JSON.parse(result.result.value);
+      assert.ok(value.same&&value.flipped&&value.example,"Real browser flashcard flip or bilingual example failed");
     }
     console.log("PASS browser",width+"x"+height,route,"exact viewport",data.viewport,
       "main",Math.round(data.main.width),"body overflow",data.fullWidth-width);
