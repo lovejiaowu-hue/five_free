@@ -1,0 +1,29 @@
+name: Validate GitHub Manual and Flashcards (PR)
+on:
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'index.html'
+      - 'docs/**'
+      - 'assets/**'
+      - 'scripts/**'
+      - '.github/workflows/validate-manual.yml'
+permissions:
+  contents: read
+jobs:
+  validate:
+    name: 24 chapters / 210 flashcards / zero private content
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: |
+          node --check assets/js/manual.js
+          node --check assets/js/vocabulary.js
+          node --check assets/js/flashcards.js
+          node --check assets/js/site.js
+      - name: Verify Markdown mirror, chapter routes, card IDs and assets
+        run: node scripts/check-site.mjs
+      - name: Verify flashcard behavior and stored progress compatibility
+        run: node scripts/test-flashcards.mjs
