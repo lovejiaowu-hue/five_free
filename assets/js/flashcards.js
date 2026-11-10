@@ -176,6 +176,29 @@
     if (st === "review") return '<span class="wc-status wc-status-review">待复习</span>';
     return '<span class="wc-status">未学习</span>';
   }
+  // Present the original example in bilingual lines; no vocabulary edits.
+  function formatExample(value) {
+    const raw = String(value == null ? "" : value);
+    const at = raw.indexOf("：");
+    if (at < 1 || at > 130 || at >= raw.length - 1)
+      return '<span class="wc-example-en">' + esc(raw) + '</span>';
+    return '<span class="wc-example-en">' + esc(raw.slice(0, at + 1)) +
+      '</span><span class="wc-example-zh">' + esc(raw.slice(at + 1)) + '</span>';
+  }
+  function syncFlip() {
+    if (!root) return;
+    const card = root.querySelector(".wc-flipcard");
+    const current = active();
+    if (card) {
+      card.classList.toggle("flipped", state.flipped);
+      card.setAttribute("aria-pressed", String(state.flipped));
+      if (current) card.setAttribute("aria-label", state.flipped ?
+        current.en + "，" + current.zh + "。点击返回正面" :
+        (state.mode === "en" ? current.en : current.zh) + "。点击翻面查看答案");
+    }
+    const daily = root.querySelector(".wc-stats .wc-stat:nth-child(4) strong");
+    if (daily) daily.textContent = String(stats().daily);
+  }
   function cardBody() {
     const items = pool();
     if (!items.length) {
@@ -197,8 +220,8 @@
       '</span><span class="wc-card-corner">0' + current.level + ' / LEVEL</span></span>' +
       '<span class="wc-card-side wc-back"><span class="wc-face-top">ANSWER / 答案</span>' +
       '<span class="wc-answer-word">' + esc(back) + '</span><span class="wc-answer-label">含义与场景</span>' +
-      '<span class="wc-answer-explain">' + esc(current.note) + '</span><span class="wc-answer-example">' +
-      esc(current.example) + '</span><span class="wc-tap-tip">' + icon("refresh-cw") + ' 点击返回卡片正面</span></span></button></div>' +
+      '<span class="wc-answer-explain">' + esc(current.note) + '</span><span class="wc-answer-example wc-example-lines">' +
+      formatExample(current.example) + '</span><span class="wc-tap-tip">' + icon("refresh-cw") + ' 点击返回卡片正面</span></span></button></div>' +
       '<div class="wc-card-aux"><div class="wc-card-aux-left">' + stateLabel(current) +
       '<span class="wc-chapter-link">出处：<button data-go="' + current.chapter + '">手册第 ' + current.chapter + ' 章 ↗</button></span></div>' +
       '<div class="wc-aux-actions"><button data-wc-action="speak" title="英文朗读">' + icon("volume-2") +
@@ -213,6 +236,7 @@
       '上一张</button><button class="wc-shuffle" data-wc-action="random">' + icon("shuffle") +
       '随机抽一张</button><button data-wc-action="next">下一张' + icon("chevron-right") +
       '</button></div>' +
+      '<p class="wc-study-tip">' + icon("book-open") + '先猜意思 → 翻面看答案 → 对照使用场景 → 标记后自动下一张</p>' +
       '<p class="wc-keytip">快捷键：空格翻面 · ← → 切卡 · 1 待复习 · 2 已掌握</p></div>';
   }
   function listBody() {
@@ -237,7 +261,7 @@
     box.innerHTML = data.map((c) =>
       '<article class="wc-word-row" data-word-id="' + esc(c.id) + '"><div class="wc-word-main">' +
       '<div class="wc-word-title"><strong>' + esc(c.en) + '</strong>' + stateLabel(c) + '</div><div class="wc-word-chinese">' +
-      esc(c.zh) + '</div><p>' + esc(c.note) + '</p><small>' + esc(c.example) + '</small></div>' +
+      esc(c.zh) + '</div><p>' + esc(c.note) + '</p><small class="wc-list-example wc-example-lines">' + formatExample(c.example) + '</small></div>' +
       '<div class="wc-word-controls"><button data-wc-word="' + esc(c.id) + '" data-wc-action="speak" aria-label="播放 ' +
       esc(c.en) + ' 的发音" title="播放发音">' + icon("volume-2") + '</button>' +
       '<button data-wc-word="' + esc(c.id) + '" data-wc-action="favorite" class="' +
@@ -256,7 +280,7 @@
       toolbar() + (state.tab === "cards" ? cardBody() : listBody()) +
       '</section></div>' +
       '<div class="wc-source-note">' + icon("book-open") +
-      '<p><strong>内容来源：</strong>本站《GitHub 中文使用手册》24 章核心术语，共 210 张词卡。每张卡对应原手册章节；发音使用浏览器自带语音合成。</p></div>' +
+      '<p><strong>内容来源：</strong>本站《GitHub 中文使用手册》共 26 章，收录 210 张相关术语卡。每张卡对应原手册章节；发音使用浏览器自带语音合成。</p></div>' +
       '<div class="wc-footer-actions"><button data-wc-action="reset">' + icon("refresh-cw") +
       '清空学习标记</button><span>数据仅保存在此设备浏览器 · 无需注册登录</span></div>' +
       '<div class="wc-toast" id="wcToast" role="status" aria-live="polite"></div></div>';
@@ -327,7 +351,8 @@
         if (!c) return;
         state.flipped = !state.flipped;
         markViewed(c);
-        draw();
+        // Preserve the card DOM so CSS rotation can animate smoothly.
+        syncFlip();
         break;
       case "next": step(1); break;
       case "prev": step(-1); break;
@@ -406,6 +431,9 @@
   }
   function mount(target) {
     root = target;
+    // Returning to the study route always starts with the question side.
+    // Keep word, status, favorites and learning records unchanged.
+    state.flipped = false;
     if (!root.dataset.wordEvents) {
       root.addEventListener("click", onClick);
       root.addEventListener("input", (event) => {

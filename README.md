@@ -45,6 +45,17 @@ https://lovejiaowu-hue.github.io/five_free/
 
 **边界：** 改写当前 `main` 的文件不等于清除 Git 的历史提交、旧 PR 讨论或已发布的历史版本。涉及历史记录清理时需另行评估，不得擅自 force push 改写仓库历史。
 
+## 阅读与抽卡体验 V3（2026-11）
+
+**坚持内容、视觉和 UI 体系不变**：沿用原深绿/青色配色、Lucide SVG、PC/H5 布局，源 Markdown、网站手册镜像、210 张词卡及其 ID 均不修改。
+
+- 正文字号默认 18px，可按 A− / A＋ 在 16–22px 调整，阅读偏好单独保存在本机 `five-guide-reading-v3`，不影响原学习记录。
+- 手册里自动识别中英术语表，支持原表格与逐条卡片模式切换、复制英文术语；阅读进度随章节滚动显示。
+- 英语卡片保持现有分类、操作方式和学习记录：实际 3D 翻面不重绘整个页面；同一个原例句以英文及中文两行呈现，场景更易理解。
+- 已掌握、待复习、收藏、原始 210 张词卡 ID 与 `five-github-words-v1` 存储保持兼容。
+- 所有视觉增强仅在 `assets/css/experience-v3.css` 作为最后加载的局部覆盖层实现；交互增强为 `assets/js/reading-v3.js` 和原抽卡模块的少量修改。
+- 自动回归：`node scripts/test-experience-v3.mjs`；验收清单见 `docs/READING_FLASHCARDS_EXPERIENCE_V3.md`。
+
 ## GitHub 英语抽卡
 
 体验入口：https://lovejiaowu-hue.github.io/five_free/#/words

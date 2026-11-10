@@ -21,11 +21,13 @@ jobs:
           node --check assets/js/manual.js
           node --check assets/js/vocabulary.js
           node --check assets/js/flashcards.js
+          node --check assets/js/reading-v3.js
       - name: Validate handbook and icons
         run: |
           node scripts/check-site.mjs
           node scripts/test-flashcards.mjs
           node scripts/test-responsive-v2.mjs
+          node scripts/test-experience-v3.mjs
   deploy:
     needs: validate
     runs-on: ubuntu-latest
