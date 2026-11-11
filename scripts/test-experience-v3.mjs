@@ -68,5 +68,5 @@ assert.ok(!wordRoot.innerHTML.includes('wc-flipcard flipped'),
 const markdownMirror={window:{}};
 vm.runInNewContext(read("assets/js/manual.js"),markdownMirror);
 assert.equal(markdownMirror.window.GITHUB_MANUAL_MARKDOWN,md);
-assert.equal((md.match(/^## \d{2}\./gm)||[]).length,26);
-console.log("PASS: 26 chapters, 210 cards, V3 CSS isolation, reading-size persistence, real flip animation, existing word storage");
+assert.equal((md.match(/^## \d{2}\./gm)||[]).length,27);
+console.log("PASS: 27 chapters, 210 cards, V3 CSS isolation, reading-size persistence, real flip animation, existing word storage");
