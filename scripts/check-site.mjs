@@ -9,7 +9,7 @@ const flash = read("assets/js/flashcards.js");
 const vocab = read("assets/js/vocabulary.js");
 const source = read("docs/GitHub_中文使用手册_2026-10.md");
 const chapterCount = (source.match(/^## \d{2}\./gm) || []).length;
-if (chapterCount !== 26) throw Error("Expected 26 handbook chapters: " + chapterCount);
+if (chapterCount !== 27) throw Error("Expected 27 handbook chapters: " + chapterCount);
 const manualSandbox = { window: {} };
 vm.runInNewContext(read("assets/js/manual.js"), manualSandbox);
 if (manualSandbox.window.GITHUB_MANUAL_MARKDOWN !== source) {
@@ -60,9 +60,11 @@ if (data.items.filter(c => c.chapter === 24).length !== 81 ||
     !data.items.some(c => c.id === "ssot" && c.chapter === 24)) {
   throw Error("Original 129 words must remain and 81 practice cards map to chapter 24");
 }
-if (!site.includes('["实战与治理",18,26]')) throw Error("Chapter 26 not in navigation");
+if (!site.includes('["实战与治理",18,27]')) throw Error("Chapter 27 not in navigation");
 if (!source.includes("## 25. GitHub Actions 免费额度耗尽") || !source.includes("PASS / FAIL / NOT_RUN") || !site.includes('data-go="25"')) throw Error("Actions fallback chapter or home entry is missing");
 if (!source.includes("## 26. GitHub Desktop") || !site.includes('data-go="26"')) throw Error("GitHub Desktop chapter or home entry missing");
+if (!source.includes("## 27. GitHub Desktop 一直出现 Changes 2") || !site.includes('data-go="27"')) throw Error("CRLF lesson 27 must be visible on homepage and navigation");
+if (!read("docs/ai-collaboration/GITHUB_DESKTOP_CRLF_CHANGES_PLAYBOOK.md").includes("*.bat -text diff")) throw Error("Anonymized CRLF playbook missing");
 
 // Public site privacy gate: allow official GitHub references, this documentation
 // site's own links, and an explicitly non-live placeholder Pages URL only.
@@ -70,7 +72,8 @@ if (!source.includes("## 26. GitHub Desktop") || !site.includes('data-go="26"'))
 const publicDocs = [
   ["README.md", read("README.md")],
   ["handbook", source],
-  ["CI playbook", read("docs/ai-collaboration/GITHUB_ACTIONS_FREE_QUOTA_CI_PLAYBOOK.md")]
+  ["CI playbook", read("docs/ai-collaboration/GITHUB_ACTIONS_FREE_QUOTA_CI_PLAYBOOK.md")],
+  ["CRLF playbook", read("docs/ai-collaboration/GITHUB_DESKTOP_CRLF_CHANGES_PLAYBOOK.md")]
 ];
 const permittedUrls = [
   /^https:\/\/docs\.github\.com\//i,
@@ -95,4 +98,4 @@ if (!source.includes("合成") && !source.includes("虚构")) {
   throw Error("Handbook needs an explicit synthetic case-study disclaimer");
 }
 
-console.log("PASS: 26 chapters, 210 flashcards, 7 categories, source sync and " + names.size + " verified icons / public-example policy");
+console.log("PASS: 27 chapters, 210 flashcards, 7 categories, source sync and " + names.size + " verified icons / public-example policy");

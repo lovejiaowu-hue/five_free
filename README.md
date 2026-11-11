@@ -1,9 +1,18 @@
 # GitHub 中文使用手册 · 产品经理 × AI 协作版
 
-响应式 H5 学习网站，保留 2026-10-30 原版 23 章及第 24 章「AI 协同研发实战」，并在 2026-11 新增第 25 章「Actions 额度耗尽过渡方案」、第 26 章「GitHub Desktop 界面识读与本地验收」。适合零编程基础产品经理与 AI 编程协作。
+响应式 H5 学习网站，保留 2026-10-30 原版 23 章及第 24 章「AI 协同研发实战」，并在 2026-11 新增第 25 章「Actions 额度耗尽过渡方案」、第 26 章「GitHub Desktop 界面识读与本地验收」、第 27 章「Changes 2 与 CRLF 排障」。适合零编程基础产品经理与 AI 编程协作。
 
 ## 在线网址
 https://lovejiaowu-hue.github.io/five_free/
+
+## 2026-11 新增：GitHub Desktop Changes 2 / CRLF 排障经验
+
+网站入口：**[第 27 章｜Changes 2 一直清不掉](https://lovejiaowu-hue.github.io/five_free/#/27)**。
+
+- 通过脱敏示例解释：为何刚 Clone 就显示两份 BAT 变更，Discard/重克隆仍复现，且全红不等于文件清空。
+- 对比 Git blob 的 LF/CRLF 与 `.gitattributes` 规则；说明 `*.bat -text diff` 是有前提的兼容修复，而非通用设置。
+- 零代码产品经理保存错误证据并负责验收，Agent 负责定位、最小修复、PR 与新检出 Changes 0 的验证。
+- 独立[技术经验包](docs/ai-collaboration/GITHUB_DESKTOP_CRLF_CHANGES_PLAYBOOK.md)不含私有业务项目标识。
 
 ## 2026-11 新增：GitHub Desktop 零代码产品经理操作课
 
@@ -83,7 +92,7 @@ https://lovejiaowu-hue.github.io/five_free/
 - index.html：静态 HTML 入口
 - assets/css/site.css：组件化响应式样式
 - assets/js/site.js：章节导航、搜索、主题、学习进度、原生 Markdown 渲染、图解
-- assets/js/manual.js：26 章完整手册数据，由 Markdown 源文件同步生成
+- assets/js/manual.js：27 章完整手册数据，由 Markdown 源文件同步生成
 - assets/js/vocabulary.js：210 张 GitHub 术语卡的英汉释义与实践场景例子
 - assets/js/flashcards.js：抽卡、翻面、朗读、标记与进度模块
 - assets/css/flashcards.css：抽卡学习页的组件样式
@@ -91,7 +100,7 @@ https://lovejiaowu-hue.github.io/five_free/
 - scripts/test-responsive-v2.mjs：断点、PC 首页 DOM 和兼容性自动检查
 - scripts/test-flashcards.mjs：抽卡功能无依赖运行测试
 - assets/icons/lucide：官方 Lucide SVG 图标和 ISC License
-- docs/GitHub_中文使用手册_2026-10.md：原始 23 章完整保留 + 2026-11 新增第 24、25、26 章
+- docs/GitHub_中文使用手册_2026-10.md：原始 23 章完整保留 + 2026-11 新增第 24、25、26、27 章
 - docs/ai-collaboration/AGENT_SVG_ICON_GUIDE.md：图标规范
 - scripts/check-site.mjs：目录、源 Markdown/网页镜像一致性、全部 210 词卡与图标资产检查
 - .github/workflows/validate-manual.yml：PR 自动检查（不发布；额度受限时可能无法运行）
