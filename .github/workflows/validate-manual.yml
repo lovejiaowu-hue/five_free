@@ -1,4 +1,4 @@
-name: Validate GitHub Manual and Flashcards (PR)
+name: Validate GitHub Manual and Publication (PR)
 on:
   pull_request:
     paths:
@@ -6,30 +6,58 @@ on:
       - 'index.html'
       - 'docs/**'
       - 'assets/**'
+      - 'experience/**'
+      - 'governance/**'
       - 'scripts/**'
-      - '.github/workflows/validate-manual.yml'
+      - '.gitignore'
+      - '.github/workflows/**'
 permissions:
   contents: read
 jobs:
   validate:
-    name: 26 chapters / 210 flashcards / public privacy gate
+    name: Site integrity / publication approvals / 27 chapters / 210 cards
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Check JavaScript syntax
+        with:
+          fetch-depth: 0
+      - name: Detect changes requiring PC/H5 browser testing
+        id: impact
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if git diff --name-only "$BASE_SHA" HEAD | grep -Eq '^(index\.html|assets/|scripts/(build-pages|check-pages-bundle|test-browser-layout-v3)\.mjs|\.github/workflows/deploy-pages\.yml)'; then
+            echo "browser=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "browser=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Validate JavaScript syntax
         run: |
           node --check assets/js/manual.js
           node --check assets/js/vocabulary.js
           node --check assets/js/flashcards.js
           node --check assets/js/site.js
           node --check assets/js/reading-v3.js
-      - name: Verify Markdown mirror, chapter routes, card IDs and assets
-        run: node scripts/check-site.mjs
-      - name: Verify flashcard behavior and stored progress compatibility
+          node --check scripts/build-pages.mjs
+          node --check scripts/check-pages-bundle.mjs
+          node --check scripts/check-public-experience.mjs
+      - name: Validate public content and experience privacy
+        run: |
+          node scripts/check-site.mjs
+          node scripts/check-public-experience.mjs
+      - name: Build approved bundle, verify no original visual file changes
+        run: |
+          node scripts/build-pages.mjs
+          node scripts/check-pages-bundle.mjs
+          node scripts/test-site-governance-v1.mjs
+      - name: Verify original flashcards and responsive behavior
         run: |
           node scripts/test-flashcards.mjs
           node scripts/test-responsive-v2.mjs
           node scripts/test-experience-v3.mjs
-      - name: Real Chrome PC/H5 layout regression
+      - name: Real Chrome PC/H5 layout regression on assembled site
+        if: steps.impact.outputs.browser == 'true'
+        env:
+          SITE_ROOT: dist
         run: node scripts/test-browser-layout-v3.mjs

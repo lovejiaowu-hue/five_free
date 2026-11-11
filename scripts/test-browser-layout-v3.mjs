@@ -80,7 +80,7 @@ try {
     await send("Emulation.setDeviceMetricsOverride", {
       width,height,deviceScaleFactor:1,mobile:width<=760,screenWidth:width,screenHeight:height
     });
-    await send("Page.navigate", {url:pathToFileURL(path.resolve("index.html")).href+"#/"+route});
+    await send("Page.navigate", {url:pathToFileURL(path.resolve(process.env.SITE_ROOT || ".", "index.html")).href+"#/"+route});
     await sleep(900);
     const response=await send("Runtime.evaluate",{expression:measure,returnByValue:true});
     const raw=response?.result?.value;
