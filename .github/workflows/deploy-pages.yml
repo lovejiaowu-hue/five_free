@@ -2,6 +2,16 @@ name: Deploy GitHub Manual Site
 on:
   push:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/**'
+      - 'docs/GitHub_中文使用手册_2026-10.md'
+      - 'experience/cases/**'
+      - 'governance/site-publications.json'
+      - 'scripts/build-pages.mjs'
+      - 'scripts/check-pages-bundle.mjs'
+      - 'scripts/check-public-experience.mjs'
+      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -15,19 +25,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate JavaScript
+      - name: Validate existing site JavaScript
         run: |
           node --check assets/js/site.js
           node --check assets/js/manual.js
           node --check assets/js/vocabulary.js
           node --check assets/js/flashcards.js
           node --check assets/js/reading-v3.js
-      - name: Validate handbook and icons
+      - name: Validate site, privacy and learning behavior
         run: |
           node scripts/check-site.mjs
+          node scripts/check-public-experience.mjs
           node scripts/test-flashcards.mjs
           node scripts/test-responsive-v2.mjs
           node scripts/test-experience-v3.mjs
+      - name: Validate isolated website bundle and publication guard
+        run: |
+          node scripts/build-pages.mjs
+          node scripts/check-pages-bundle.mjs
+          node scripts/test-site-governance-v1.mjs
   deploy:
     needs: validate
     runs-on: ubuntu-latest
@@ -36,12 +52,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Build the allowlisted Pages files
+        run: |
+          node scripts/check-public-experience.mjs
+          node scripts/build-pages.mjs
+          node scripts/check-pages-bundle.mjs
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Upload Pages files
+      - name: Upload only the site bundle
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: dist
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
